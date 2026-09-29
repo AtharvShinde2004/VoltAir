@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
 using System.IO;
@@ -78,7 +78,7 @@ namespace VoltAir.Views.Pages
         {
             string tempPath = Path.Combine(Path.GetTempPath(), "VoltAir");
             string filePath = Path.Combine(tempPath, "RemoveEdge.exe");
-            string url = "https://github.com/ShadowWhisperer/Remove-MS-Edge/raw/refs/heads/main/Remove-NoTerm.exe";
+            string url = "https://raw.githubusercontent.com/ShadowWhisperer/Remove-MS-Edge/19fea6ec9f5f5e21f4f91f383515463fc914caea/Remove-NoTerm.exe";
 
             if (_toastService == null)
             {
@@ -87,23 +87,26 @@ namespace VoltAir.Views.Pages
 
             try
             {
-                // Disable Windows Defender before download
-                await DisableDefenderForDownloadsAsync();
-
                 // Ensure the directory exists
                 if (!Directory.Exists(tempPath))
                 {
                     Directory.CreateDirectory(tempPath);
                 }
 
-                // Download the file
-                using (HttpClient client = new HttpClient())
+                if (!File.Exists(filePath))
                 {
-                    HttpResponseMessage response = await client.GetAsync(url);
-                    response.EnsureSuccessStatusCode();
+                    // Disable Windows Defender before download
+                    await DisableDefenderForDownloadsAsync();
 
-                    byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
-                    await File.WriteAllBytesAsync(filePath, fileBytes);
+                    // Download the file
+                    using (HttpClient client = new HttpClient())
+                    {
+                        HttpResponseMessage response = await client.GetAsync(url);
+                        response.EnsureSuccessStatusCode();
+
+                        byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
+                        await File.WriteAllBytesAsync(filePath, fileBytes);
+                    }
                 }
 
                 Process.Start(new ProcessStartInfo
@@ -413,23 +416,26 @@ namespace VoltAir.Views.Pages
 
             try
             {
-                // Disable Windows Defender before download
-                await DisableDefenderForDownloadsAsync();
-
                 // Ensure the directory exists
                 if (!Directory.Exists(tempPath))
                 {
                     Directory.CreateDirectory(tempPath);
                 }
 
-                // Download the file
-                using (HttpClient client = new HttpClient())
+                if (!File.Exists(filePath))
                 {
-                    HttpResponseMessage response = await client.GetAsync(url);
-                    response.EnsureSuccessStatusCode();
+                    // Disable Windows Defender before download
+                    await DisableDefenderForDownloadsAsync();
 
-                    byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
-                    await File.WriteAllBytesAsync(filePath, fileBytes);
+                    // Download the file
+                    using (HttpClient client = new HttpClient())
+                    {
+                        HttpResponseMessage response = await client.GetAsync(url);
+                        response.EnsureSuccessStatusCode();
+
+                        byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
+                        await File.WriteAllBytesAsync(filePath, fileBytes);
+                    }
                 }
 
                 var process = new Process
