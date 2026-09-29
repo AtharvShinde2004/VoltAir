@@ -119,6 +119,10 @@ namespace VoltAir.Views.Pages
                 
                 await _toastService.ShowSuccess("Microsoft Edge removal started successfully", "Edge Removal");
             }
+            catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 225 || ex.Message.Contains("virus", StringComparison.OrdinalIgnoreCase))
+            {
+                await _toastService.ShowError("Windows Defender blocked the removal tool (false positive). Please allow it in Windows Security > Protection History.", "Edge Removal Blocked");
+            }
             catch (Exception ex)
             {
                 await _toastService.ShowError($"Error removing Microsoft Edge: {ex.Message}", "Edge Removal Error");
@@ -463,6 +467,10 @@ namespace VoltAir.Views.Pages
                 await process.WaitForExitAsync();
 
                 await _toastService.ShowSuccess("Windows Defender removed successfully", "Defender Removal");
+            }
+            catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 225 || ex.Message.Contains("virus", StringComparison.OrdinalIgnoreCase))
+            {
+                await _toastService.ShowError("Windows Defender blocked the removal tool (false positive). Please allow it in Windows Security > Protection History.", "Defender Removal Blocked");
             }
             catch (Exception ex)
             {
